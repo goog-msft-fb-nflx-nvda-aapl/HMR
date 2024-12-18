@@ -78,7 +78,7 @@ python silhouette_generator.py --labels_path ./data/labels.npz \
 ## Outputs/Visualization
 Below is an example of the visualization comparing the original image, SSP-3D silhouette, and SAM-predicted silhouette:
 
-![Example Visualization](./example_comparison.png "Visualization Example")
+![Example Visualization](./example_visualization.png "Visualization Example")
 
 
 ## Examples
