@@ -1,4 +1,3 @@
-```markdown
 # Silhouette Generation with SAM and SSP-3D Integration
 
 This repository provides a tool to generate accurate binary silhouettes for human subjects in images using the Segment Anything Model (SAM). The tool leverages keypoints and bounding boxes from the SSP-3D dataset as prompts to refine the silhouette predictions.
@@ -102,4 +101,3 @@ If an error occurs while processing an image (e.g., missing file), it will be lo
 5. [COCO Dataset](https://cocodataset.org/)  
 
 For questions or issues, feel free to open an issue in this repository.
-```
