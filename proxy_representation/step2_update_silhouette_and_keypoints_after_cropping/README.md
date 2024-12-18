@@ -68,6 +68,7 @@ The script supports 17 keypoints:
 - Cropped silhouette images
 - Updated annotation file with cropped keypoint coordinates
 - Visualization images with original and cropped images side by side
+![Example Visualization](./example_comparison.png "Visualization Example")
 
 ## Visualization Details
 - Green dots represent keypoints
