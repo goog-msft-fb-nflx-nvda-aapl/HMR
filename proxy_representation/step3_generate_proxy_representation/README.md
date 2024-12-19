@@ -82,7 +82,7 @@ python script_name.py
 2. **Visualizations**
    - Saved as `.png` files in the `VISUALIZATION_DIR`.
    - Each file represents all 18 layers of a proxy representation.
-
+![Example Visualization](./example_comparison.png "Visualization Example")
 ---
 
 ## Example
