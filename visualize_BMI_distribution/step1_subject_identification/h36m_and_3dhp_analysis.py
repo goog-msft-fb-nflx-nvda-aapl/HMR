@@ -106,3 +106,55 @@ male_indices_h36m = np.isin(subject_ids_h36m, male_subjects_h36m)
 
 np.save("smpl_betas_avg_h36m_f.npy", betas_h36m[female_indices_h36m])
 np.save("smpl_betas_avg_h36m_m.npy", betas_h36m[male_indices_h36m])
+
+"""
+Tranform betas into npz files taht follow bomoto input format.
+"""
+import numpy as np
+
+
+def process_smpl_betas(file_path, output_path):
+    """
+    Loads average SMPL betas from a given file and creates a dictionary 
+    with 'betas', 'poses', and 'trans' keys. 
+    Saves the resulting dictionary to an .npz file.
+
+    Args:
+        file_path: Path to the .npy file containing average SMPL betas.
+        output_path: Path to save the output .npz file.
+
+    Returns:
+        A dictionary containing:
+            - 'betas': NumPy array of average betas (shape: (number_of_data, 10)), dtype: float64
+            - 'poses': NumPy array of zeros (shape: (number_of_data, 72)), dtype: float64
+            - 'trans': NumPy array of zeros (shape: (number_of_data, 3)), dtype: float32
+    """
+    betas = np.load(file_path)
+    num_data = betas.shape[0]
+
+    poses = np.zeros((num_data, 72), dtype=np.float64)
+    trans = np.zeros((num_data, 3), dtype=np.float32)
+
+    data_dict = {'betas': betas, 'poses': poses, 'trans': trans}
+    np.savez(output_path, **data_dict) 
+
+    return data_dict
+
+# Define file paths
+input_files = [
+    "smpl_betas_avg_3dhp_f.npy",
+    "smpl_betas_avg_3dhp_m.npy",
+    "smpl_betas_avg_h36m_f.npy",
+    "smpl_betas_avg_h36m_m.npy"
+]
+
+output_files = [
+    "smpl_betas_avg_3dhp_f.npz",
+    "smpl_betas_avg_3dhp_m.npz",
+    "smpl_betas_avg_h36m_f.npz",
+    "smpl_betas_avg_h36m_m.npz"
+]
+
+# Process and save each file
+for input_file, output_file in zip(input_files, output_files):
+    data = process_smpl_betas(input_file, output_file)
