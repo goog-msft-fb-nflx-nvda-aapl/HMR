@@ -6,7 +6,7 @@ This script analyzes two human pose estimation datasets, [Human3.6M](http://visi
 
 **SMPL Betas**
 
-SMPL betas are a set of shape parameters used in the SMPL body model. They represent the body shape of an individual in the 3D model. The betas provided by this script are based on the betas provided by the author of ScoreHMR ([https://statho.github.io/ScoreHMR/](https://statho.github.io/ScoreHMR/)).
+SMPL betas are a set of shape parameters used in the SMPL body model. They represent the body shape of an individual in the 3D model. The betas provided by this script are based on the betas provided by the author of [ScoreHMR](https://statho.github.io/ScoreHMR/).
 
 **Script Functionality**
 

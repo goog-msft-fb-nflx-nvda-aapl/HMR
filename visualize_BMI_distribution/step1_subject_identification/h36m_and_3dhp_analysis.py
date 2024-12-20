@@ -50,13 +50,13 @@ def save_average_betas(subject_ids, average_betas, output_path):
     np.savez(output_path, subject=subjects, beta=betas)
 
 # Define paths and subject IDs for each dataset
-PATH_TRAIN_H36M = "/home/iismtl519-2/Desktop/ScoreHMR/data/datasets/h36m_train_mosh_v2.npz"
+PATH_TRAIN_H36M = "h36m_train_mosh_v2.npz"
 H36M_SUBJECT_IDS = [1, 5, 6, 7, 8] 
-H36M_OUTPUT_PATH = "h36m_average_betas.npz"
+H36M_OUTPUT_PATH = "smpl_betas_avg_h36m.npz"
 
-PATH_TRAIN_3DHP = "/home/iismtl519-2/Desktop/ScoreHMR/data/datasets/mpi_inf_3dhp_train_eft_v3.npz"
+PATH_TRAIN_3DHP = "mpi_inf_3dhp_train_eft_v3.npz"
 DHP_SUBJECT_IDS = [1, 2, 3, 4, 5, 6, 7, 8]
-DHP_OUTPUT_PATH = "3dhp_average_betas.npz"
+DHP_OUTPUT_PATH = "smpl_betas_avg_3dhp.npz"
 
 # Analyze H36M dataset
 h36m_results = analyze_dataset(PATH_TRAIN_H36M, H36M_SUBJECT_IDS)
