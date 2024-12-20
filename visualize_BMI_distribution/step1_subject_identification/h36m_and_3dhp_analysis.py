@@ -69,3 +69,40 @@ save_average_betas(H36M_SUBJECT_IDS, h36m_results['average_betas'], H36M_OUTPUT_
 
 # Save average betas for 3DHP
 save_average_betas(DHP_SUBJECT_IDS, dhp_results['average_betas'], DHP_OUTPUT_PATH)
+
+path_smpl_beta_3dhp = "smpl_betas_avg_3dhp.npz"
+path_smpl_beta_h36m = "smpl_betas_avg_h36m.npz"
+path_smpl_beta_3dhp_f = "smpl_betas_avg_3dhp_f.npy"
+path_smpl_beta_3dhp_m = "smpl_betas_avg_3dhp_m.npy"
+path_smpl_beta_h36m_f = "smpl_betas_avg_h36m_f.npy"
+path_smpl_beta_h36m_m = "smpl_betas_avg_h36m_m.npy"
+
+# Load data from .npz files
+with np.load("smpl_betas_avg_3dhp.npz") as data_3dhp:
+    subject_ids_3dhp = data_3dhp['subject']
+    betas_3dhp = data_3dhp['beta']
+
+with np.load("smpl_betas_avg_h36m.npz") as data_h36m:
+    subject_ids_h36m = data_h36m['subject']
+    betas_h36m = data_h36m['beta']
+
+# Define female and male subject IDs for each dataset
+female_subjects_3dhp = [1, 4, 5, 6]
+male_subjects_3dhp = [2, 3, 7, 8]
+
+female_subjects_h36m = [1, 5, 7]
+male_subjects_h36m = [6, 8]
+
+# Filter and save female and male betas for 3DHP
+female_indices_3dhp = np.isin(subject_ids_3dhp, female_subjects_3dhp)
+male_indices_3dhp = np.isin(subject_ids_3dhp, male_subjects_3dhp)
+
+np.save("smpl_betas_avg_3dhp_f.npy", betas_3dhp[female_indices_3dhp])
+np.save("smpl_betas_avg_3dhp_m.npy", betas_3dhp[male_indices_3dhp])
+
+# Filter and save female and male betas for H36M
+female_indices_h36m = np.isin(subject_ids_h36m, female_subjects_h36m)
+male_indices_h36m = np.isin(subject_ids_h36m, male_subjects_h36m)
+
+np.save("smpl_betas_avg_h36m_f.npy", betas_h36m[female_indices_h36m])
+np.save("smpl_betas_avg_h36m_m.npy", betas_h36m[male_indices_h36m])
