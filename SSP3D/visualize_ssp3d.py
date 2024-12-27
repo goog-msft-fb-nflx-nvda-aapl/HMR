@@ -245,6 +245,67 @@ def create_sports_visualizations(df, output_dir='sports_visualizations'):
     
     print(f"Distribution visualizations have been saved to the '{output_dir}' directory.")
 
+def create_combined_measurement_distribution(df, output_dir='sports_visualizations'):
+    # Create output directory if it doesn't exist
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    
+    # Set the style for all plots
+    plt.style.use('default')
+    
+    # Set a consistent figure size and font size
+    plt.rcParams['figure.figsize'] = [15, 10]
+    plt.rcParams['font.size'] = 10
+    
+    # Define the measurements to plot (order should be the same as in previous visualizations)
+    measurements = [
+        'Height (m)', 'Chest Circumference (m)', 'Waist Circumference (m)', 
+        'Hip Circumference (m)', 'Mass (kg)', 'BMI ( kg / (m^2) )'
+    ]
+    
+    # Check the unique values in the 'genders' column to adjust the color palette
+    gender_values = df['genders'].unique()
+    print(f"Unique gender values in the dataset: {gender_values}")
+    
+    # Adjust the color palette based on the actual gender values
+    if 'Female' in gender_values and 'Male' in gender_values:
+        color_palette = {"Female": "red", "Male": "blue"}
+    else:
+        # If genders are represented as 'F' and 'M' or other values, adjust accordingly
+        color_palette = {"F": "red", "M": "blue"}
+    
+    # Create subplots to display all measurements in one figure
+    fig, axes = plt.subplots(2, 3, figsize=(15, 10))
+    axes = axes.flatten()
+    
+    # Iterate through the measurements and plot them in individual subplots
+    for idx, measurement in enumerate(measurements):
+        ax = axes[idx]
+        
+        # Plot histogram for each gender separately with distinct colors
+        sns.histplot(data=df, x=measurement, hue='genders', kde=True, 
+                     bins=20, palette=color_palette, ax=ax, stat='density', multiple='layer')
+        
+        # Set the title and labels for each subplot
+        ax.set_title(f'{measurement} Distribution by Gender')
+        ax.set_xlabel(measurement)
+        ax.set_ylabel('Density')
+    
+    # Adjust the layout of the subplots
+    plt.tight_layout()
+    
+    # Create a safe filename for the plot
+    safe_filename = create_safe_filename('combined_measurement_distribution')
+    
+    # Save the figure
+    plt.savefig(f'{output_dir}/{safe_filename}.png', dpi=300, bbox_inches='tight')
+    plt.close()
+    
+    print(f"Combined measurement distribution plot has been saved to the '{output_dir}' directory.")
 
+# Assuming df is already loaded with the required data
 df = pd.read_csv('ssp3d.csv')
-create_sports_visualizations(df)
+create_combined_measurement_distribution(df)
+# Assuming df is already loaded with the required data
+df = pd.read_csv('ssp3d.csv')
+create_combined_measurement_distribution(df)
