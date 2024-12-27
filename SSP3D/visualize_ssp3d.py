@@ -3,6 +3,18 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import os
 
+import re
+
+def create_safe_filename(text):
+    """Create a safe filename by removing or replacing problematic characters"""
+    # Replace special characters with underscores
+    safe_name = re.sub(r'[^a-zA-Z0-9]', '_', text)
+    # Remove multiple consecutive underscores
+    safe_name = re.sub(r'_+', '_', safe_name)
+    # Remove leading/trailing underscores
+    safe_name = safe_name.strip('_')
+    return safe_name
+
 def create_sports_visualizations(df, output_dir='sports_visualizations'):
     # Create output directory if it doesn't exist
     if not os.path.exists(output_dir):
@@ -143,6 +155,95 @@ def create_sports_visualizations(df, output_dir='sports_visualizations'):
     plt.close()
     
     print(f"All visualizations have been saved to the '{output_dir}' directory.")
+
+    
+    # Create output directory if it doesn't exist
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    
+    # Set the style for all plots
+    plt.style.use('default')
+    
+    # Set a consistent figure size and font size
+    plt.rcParams['figure.figsize'] = [12, 6]
+    plt.rcParams['font.size'] = 10
+    
+    # Define a color palette for genders
+    color_palette = sns.color_palette("Set2")
+    gender_colors = dict(zip(df['genders'].unique(), color_palette))
+    
+    # Add distribution plots for all measurements
+    measurements = {
+        'Height (m)': 'Height Distribution',
+        'Mass (kg)': 'Mass Distribution',
+        'BMI ( kg / (m^2) )': 'BMI Distribution',
+        'Chest Circumference (m)': 'Chest Circumference Distribution',
+        'Waist Circumference (m)': 'Waist Circumference Distribution',
+        'Hip Circumference (m)': 'Hip Circumference Distribution'
+    }
+    
+    # Create distribution plot for each measurement
+    for col, title in measurements.items():
+        plt.figure(figsize=(12, 6))
+        
+        # Create the main distribution plot
+        sns.kdeplot(data=df, x=col, hue='genders', fill=True, alpha=0.5, palette=gender_colors)
+        
+        # Add individual points at the bottom (rug plot)
+        sns.rugplot(data=df, x=col, hue='genders', alpha=0.5, palette=gender_colors)
+        
+        # Add mean lines for each gender
+        for gender in df['genders'].unique():
+            mean_val = df[df['genders'] == gender][col].mean()
+            plt.axvline(x=mean_val, 
+                       color=gender_colors[gender],
+                       linestyle='--',
+                       alpha=0.8,
+                       label=f'{gender} Mean')
+        
+        plt.title(f'{title} by Gender')
+        plt.xlabel(col)
+        plt.ylabel('Density')
+        
+        # Add summary statistics to the plot
+        stats_text = []
+        for gender in df['genders'].unique():
+            gender_data = df[df['genders'] == gender][col]
+            stats_text.append(f'{gender}:\n'
+                            f'Mean: {gender_data.mean():.3f}\n'
+                            f'Std: {gender_data.std():.3f}\n'
+                            f'Median: {gender_data.median():.3f}')
+        
+        plt.text(0.95, 0.95, '\n\n'.join(stats_text),
+                transform=plt.gca().transAxes,
+                verticalalignment='top',
+                horizontalalignment='right',
+                bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
+        
+        plt.legend(title='Gender')
+        plt.tight_layout()
+        
+        # Create safe filename
+        safe_filename = create_safe_filename(col)
+        plt.savefig(f'{output_dir}/distribution_{safe_filename}.png',
+                    dpi=300, bbox_inches='tight')
+        plt.close()
+    
+    # Create a combined visualization of all distributions
+    plt.figure(figsize=(15, 10))
+    
+    for idx, (col, title) in enumerate(measurements.items(), 1):
+        plt.subplot(2, 3, idx)
+        sns.kdeplot(data=df, x=col, hue='genders', fill=True, alpha=0.5, palette=gender_colors)
+        plt.title(title)
+        plt.xlabel(col)
+        plt.ylabel('Density')
+    
+    plt.tight_layout()
+    plt.savefig(f'{output_dir}/all_distributions_combined.png', dpi=300, bbox_inches='tight')
+    plt.close()
+    
+    print(f"Distribution visualizations have been saved to the '{output_dir}' directory.")
 
 
 df = pd.read_csv('ssp3d.csv')
