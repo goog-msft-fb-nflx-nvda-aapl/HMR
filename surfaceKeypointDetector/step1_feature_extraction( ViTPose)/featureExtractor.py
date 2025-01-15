@@ -143,8 +143,16 @@ def extract_features(img_dir, segm_dir, output_dir, vis_dir=None, batch_size=32,
                 with torch.no_grad():
                     outputs = model(**inputs)
                 
-                # Extract features from the last hidden state
-                features = outputs.hidden_states[-1][:, 0].cpu().numpy()
+                # Option 1: Use heatmaps (primary pose representation)
+                #features = outputs.heatmaps.flatten(1).cpu().numpy()
+                
+                # Option 2: Use mean pooled hidden states (more global representation)
+                features = outputs.hidden_states[-1].mean(dim=1).cpu().numpy()
+                
+                # Option 3: Combine both (might be most comprehensive)
+                # heatmap_features = outputs.heatmaps.flatten(1) #heatmap_features.shape torch.Size([32, 52224])
+                # hidden_features = outputs.hidden_states[-1].mean(dim=1) #heatmap_features.shape torch.Size([32, 52224])
+                # features = torch.cat([heatmap_features, hidden_features], dim=1).cpu().numpy()
                 
                 # Save features for each valid image in batch
                 for idx, feat in zip(valid_indices, features):
