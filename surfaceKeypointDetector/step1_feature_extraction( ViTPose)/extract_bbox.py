@@ -185,3 +185,35 @@ for idx in sample_indices:
         print(f"Error processing {imgname}: {str(e)}")
 
 print(f"\nVisualizations saved to: {output_dir}")
+
+import numpy as np
+
+# Load the data
+data = np.load('/home/iismtl519-2/Desktop/SynthMoCap/synthmocap_with_bbox.npz')
+
+# Create a new dictionary with all existing data
+data_dict = dict(data)
+
+# Split bbox_cs into center and scale
+center = data['bbox_cs'][:, :2]  # First two columns (center_x, center_y)
+scale = data['bbox_cs'][:, 2]    # Third column (scale)
+
+# Add the new keys
+data_dict['center'] = center
+data_dict['scale'] = scale
+
+# Remove the old bbox_cs key if you don't want to keep it
+if 'bbox_cs' in data_dict:
+    del data_dict['bbox_cs']
+
+# Save the updated dictionary to the npz file
+np.savez('/home/iismtl519-2/Desktop/SynthMoCap/synthmocap_with_bbox.npz', **data_dict)
+
+# Verify the save
+verification = np.load('/home/iismtl519-2/Desktop/SynthMoCap/synthmocap_with_bbox.npz')
+print("\nVerification:")
+print("New keys added:", 'center' in verification, 'scale' in verification)
+print("Old key removed:", 'bbox_cs' not in verification)
+print("Shapes:")
+print("- center:", verification['center'].shape)  # Should be (N, 2)
+print("- scale:", verification['scale'].shape)    # Should be (N,)
