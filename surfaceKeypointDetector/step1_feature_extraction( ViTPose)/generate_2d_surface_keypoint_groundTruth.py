@@ -4,23 +4,16 @@ import numpy as np
 from pathlib import Path
 import tqdm
 import matplotlib.pyplot as plt
-import argparse
-import json
 import lzma
 import subprocess
 from getpass import getpass
-from pathlib import Path
 from tarfile import TarFile
-from pathlib import Path
 import cv2
-import matplotlib.pyplot as plt
-import numpy as np
 import pyrender
 import trimesh
 from transformations import rotation_matrix
+from smpl_numpy import SMPL
 
-from smpl_numpy import SMPL
-from smpl_numpy import SMPL
 SMPLH_MODEL = None
 
 def _download_smplh() -> None:
